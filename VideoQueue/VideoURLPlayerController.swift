@@ -8,11 +8,14 @@
 
 import UIKit
 import AVKit
+import XCDYouTubeKit
 
 class VideoURLPlayerViewController: AVPlayerViewController {
 	
 	var onItemDidFinish: ((URL) -> ())?
 	var onQueueDidFinish: (() -> ())?
+	
+	var urlQueue: [URL] = []
 	
 	required init?(coder aDecoder: NSCoder) {
 		fatalError()
@@ -20,16 +23,29 @@ class VideoURLPlayerViewController: AVPlayerViewController {
 	
 	init(urls: [URL]) {
 		super.init(nibName: nil, bundle: nil)
-		set(urls: urls)
+		
+		urlQueue = urls
+		loadNextVideo()
 	}
 	
-	func set(urls: [URL]) {
-		// Items
-		let items = urls.map { AVPlayerItem(url: $0) }
-		items.forEach { addDidEndNotification(for: $0) }
-		
-		// Player
-		self.player = AVQueuePlayer(items: items)
+	private func loadNextVideo() {
+		let nextURL = urlQueue[0]
+
+		if nextURL.isYoutubeVideo {
+			let youtubeID = nextURL.path.replacingOccurrences(of: "/", with: "")
+			XCDYouTubeClient.default().getVideoWithIdentifier(youtubeID) { video, error in
+				self.setCurrentVideoURL(url: video!.streamURLs.values.randomElement()!)
+			}
+		} else {
+			setCurrentVideoURL(url: nextURL)
+		}
+	}
+	
+	private func setCurrentVideoURL(url: URL) {
+		let playerItem = AVPlayerItem(url: url)
+		addDidEndNotification(for: playerItem)
+		self.player = AVPlayer(playerItem: playerItem)
+		player?.play()
 	}
 	
 	// MARK: - Notifications
@@ -48,12 +64,17 @@ class VideoURLPlayerViewController: AVPlayerViewController {
 		let item = notification.object as! AVPlayerItem
 		let asset = item.asset as! AVURLAsset
 		
-		onItemDidFinish?(asset.url)
+		let finishedURL = urlQueue[0]
 		
-		let player = self.player as! AVQueuePlayer
+		onItemDidFinish?(finishedURL)
 		
-		if player.items().count == 1 { // It will still contain the item that just finished
+		urlQueue.remove(at: 0)
+		
+		if urlQueue.count == 0 { // It will still contain the item that just finished
 			onQueueDidFinish?()
+		} else {
+			loadNextVideo()
+			player?.play()
 		}
 	}
 	

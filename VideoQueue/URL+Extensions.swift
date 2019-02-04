@@ -17,6 +17,10 @@ extension URL {
 		return (self.host != nil)
 	}
 	
+	var isYoutubeVideo: Bool {
+		return self.host == "youtu.be" &&  self.path.count > 0
+	}
+	
 	var isVideo: Bool {
 		return videoExtensions.contains(self.pathExtension)
 	}

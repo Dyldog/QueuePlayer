@@ -16,7 +16,22 @@
 		62FE8ED022080B5A005FA7DB /* VideoListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62FE8ECF22080B5A005FA7DB /* VideoListViewModel.swift */; };
 		62FE8ED222080B9D005FA7DB /* URL+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62FE8ED122080B9D005FA7DB /* URL+Extensions.swift */; };
 		62FE8ED422080BEA005FA7DB /* SimpleListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62FE8ED322080BEA005FA7DB /* SimpleListViewController.swift */; };
+		62FE8EDA220811DD005FA7DB /* XCDYouTubeKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 62FE8ED9220811DD005FA7DB /* XCDYouTubeKit.framework */; };
+		62FE8EDC220811EA005FA7DB /* XCDYouTubeKit.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 62FE8ED9220811DD005FA7DB /* XCDYouTubeKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		62FE8EDB220811E1005FA7DB /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				62FE8EDC220811EA005FA7DB /* XCDYouTubeKit.framework in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		62FE8EB82207E9F1005FA7DB /* VideoQueue.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = VideoQueue.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -30,6 +45,7 @@
 		62FE8ECF22080B5A005FA7DB /* VideoListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoListViewModel.swift; sourceTree = "<group>"; };
 		62FE8ED122080B9D005FA7DB /* URL+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URL+Extensions.swift"; sourceTree = "<group>"; };
 		62FE8ED322080BEA005FA7DB /* SimpleListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimpleListViewController.swift; sourceTree = "<group>"; };
+		62FE8ED9220811DD005FA7DB /* XCDYouTubeKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCDYouTubeKit.framework; path = Carthage/Build/iOS/XCDYouTubeKit.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -37,6 +53,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				62FE8EDA220811DD005FA7DB /* XCDYouTubeKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -48,6 +65,7 @@
 			children = (
 				62FE8EBA2207E9F1005FA7DB /* VideoQueue */,
 				62FE8EB92207E9F1005FA7DB /* Products */,
+				62FE8ED8220811D6005FA7DB /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -84,6 +102,14 @@
 			path = "Video List";
 			sourceTree = "<group>";
 		};
+		62FE8ED8220811D6005FA7DB /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				62FE8ED9220811DD005FA7DB /* XCDYouTubeKit.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -91,6 +117,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 62FE8ECA2207E9F3005FA7DB /* Build configuration list for PBXNativeTarget "VideoQueue" */;
 			buildPhases = (
+				62FE8EDB220811E1005FA7DB /* CopyFiles */,
 				62FE8EB42207E9F1005FA7DB /* Sources */,
 				62FE8EB52207E9F1005FA7DB /* Frameworks */,
 				62FE8EB62207E9F1005FA7DB /* Resources */,
@@ -308,6 +335,10 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 6CW3378X23;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
 				INFOPLIST_FILE = VideoQueue/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -326,6 +357,10 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 6CW3378X23;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
 				INFOPLIST_FILE = VideoQueue/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",

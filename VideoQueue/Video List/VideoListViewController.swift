@@ -13,6 +13,7 @@ class VideoListViewController: SimpleListViewController {
 	var viewModel = VideoListViewModel()
 	
 	var testVideoURLs = [
+		URL(string: "https://youtu.be/7-w6c-ybwXk")!,
 		URL(string: "http://incident.net/v8/files/mp4/9.mp4")!,
 		URL(string: "http://www.jeremystreliski.com/IMG/mp4/2011_Alvalle_0_13_.mp4")!
 	]
@@ -26,6 +27,11 @@ class VideoListViewController: SimpleListViewController {
 		if viewModel.numberOfVideoURLs == 0 {
 			testVideoURLs.forEach { viewModel.addVideo(url: $0) }
 		}
+	}
+	
+	override func viewWillAppear(_ animated: Bool) {
+		super.viewWillAppear(animated)
+		tableView.reloadData()
 	}
 	
 	// MARK: - Tableview
@@ -114,14 +120,14 @@ extension VideoListViewController {
 		playerViewController.onItemDidFinish = { url in
 			print("Video did finish playing: \(url)")
 			
-			guard let videoIndex = playerURLs.firstIndex(where: { $0 == url }) else {
+			guard let videoIndex = self.viewModel.videoURLs.firstIndex(where: { $0 == url }) else {
 				print("ERROR: Tried to remove video with URL \(url), but URL is not in queue")
 				return
 			}
 			
-			playerURLs.remove(at: videoIndex)
+			self.viewModel.removeVideo(at: videoIndex)
 			
-			print("\(playerURLs.count) videos remaining in queue")
+			print("\(self.viewModel.videoURLs.count) videos remaining in queue")
 		}
 		
 		playerViewController.onQueueDidFinish = {
@@ -130,7 +136,7 @@ extension VideoListViewController {
 		
 		// Present
 		present(playerViewController, animated: true, completion: {
-			playerViewController.player?.play()
+//			playerViewController.player?.play()
 		})
 	}
 }
