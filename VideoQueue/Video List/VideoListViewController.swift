@@ -23,7 +23,9 @@ class VideoListViewController: SimpleListViewController {
 		navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addButtonTapped))
 		navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .play, target: self, action: #selector(playButtonTapped))
 		
-		testVideoURLs.forEach { viewModel.addVideo(url: $0) }
+		if viewModel.numberOfVideoURLs == 0 {
+			testVideoURLs.forEach { viewModel.addVideo(url: $0) }
+		}
 	}
 	
 	// MARK: - Tableview
