@@ -9,43 +9,40 @@
 import Foundation
 
 struct VideoListViewModel {
-	private let videoURLDefaultsKey = "VIDEO_URLS"
+	private let videoDefaultsKey = "VIDEOS"
 	private let jsonEncoder = JSONEncoder()
 	private let jsonDecoder = JSONDecoder()
 	
-	private(set) var videoURLs: [URL] = []
-	
-	var numberOfVideoURLs: Int { return videoURLs.count }
+	private(set) var videos: [Video] = []
 	
 	init() {
 		retrieveURLsFromStorage()
 	}
 	
-	mutating func addVideo(url: URL) {
-		videoURLs.append(url)
-		commitURLsToStorage()
+	mutating func addVideo(video: Video) {
+		videos.append(video)
+		commitVideosToStorage()
 	}
 	
 	mutating func removeVideo(at index: Int) {
-		videoURLs.remove(at: index)
-		commitURLsToStorage()
+		videos.remove(at: index)
+		commitVideosToStorage()
 	}
 	
 	func titleForVideo(at index: Int) -> String {
-		let url = videoURLs[index]
-		
+		let url = videos[index].url
 		return "\(url.host!)\(url.path)\(url.query ?? "")"
 	}
 	
-	private func commitURLsToStorage() {
+	private func commitVideosToStorage() {
 		let jsonEncoder = JSONEncoder()
-		let videoURLData = try! jsonEncoder.encode(videoURLs)
-		UserDefaults.standard.set(videoURLData, forKey: videoURLDefaultsKey)
+		let videoData = try! jsonEncoder.encode(videos)
+		UserDefaults.standard.set(videoData, forKey: videoDefaultsKey)
 	}
 	
 	private mutating func retrieveURLsFromStorage() {
-		if let videoURLData = UserDefaults.standard.data(forKey: videoURLDefaultsKey) {
-			videoURLs = try! jsonDecoder.decode([URL].self, from: videoURLData)
+		if let videoData = UserDefaults.standard.data(forKey: videoDefaultsKey) {
+			videos = try! jsonDecoder.decode([Video].self, from: videoData)
 		}
 	}
 }

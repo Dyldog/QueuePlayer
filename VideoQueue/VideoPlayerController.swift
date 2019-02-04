@@ -10,42 +10,33 @@ import UIKit
 import AVKit
 import XCDYouTubeKit
 
-class VideoURLPlayerViewController: AVPlayerViewController {
+class VideoPlayerViewController: AVPlayerViewController {
 	
-	var onItemDidFinish: ((URL) -> ())?
+	var onItemDidFinish: ((Video) -> ())?
 	var onQueueDidFinish: (() -> ())?
 	
-	var urlQueue: [URL] = []
+	var videoQueue: [Video] = []
 	
 	required init?(coder aDecoder: NSCoder) {
 		fatalError()
 	}
 	
-	init(urls: [URL]) {
+	init(videos: [Video]) {
 		super.init(nibName: nil, bundle: nil)
 		
-		urlQueue = urls
+		videoQueue = videos
 		loadNextVideo()
 	}
 	
 	private func loadNextVideo() {
-		let nextURL = urlQueue[0]
-
-		if nextURL.isYoutubeVideo {
-			let youtubeID = nextURL.path.replacingOccurrences(of: "/", with: "")
-			XCDYouTubeClient.default().getVideoWithIdentifier(youtubeID) { video, error in
-				self.setCurrentVideoURL(url: video!.streamURLs.values.randomElement()!)
-			}
-		} else {
-			setCurrentVideoURL(url: nextURL)
+		let nextVideo = videoQueue[0]
+		
+		nextVideo.retrieveFinalURL { url in
+			let playerItem = AVPlayerItem(url: url)
+			self.addDidEndNotification(for: playerItem)
+			self.player = AVPlayer(playerItem: playerItem)
+			self.player?.play()
 		}
-	}
-	
-	private func setCurrentVideoURL(url: URL) {
-		let playerItem = AVPlayerItem(url: url)
-		addDidEndNotification(for: playerItem)
-		self.player = AVPlayer(playerItem: playerItem)
-		player?.play()
 	}
 	
 	// MARK: - Notifications
@@ -60,17 +51,13 @@ class VideoURLPlayerViewController: AVPlayerViewController {
 	
 	@objc private func videoDidFinishPlaying(notification: NSNotification) {
 		removeDidEndNotification(for: notification.object)
+
+		let finishedVideo = videoQueue[0]
+		videoQueue.remove(at: 0)
 		
-		let item = notification.object as! AVPlayerItem
-		let asset = item.asset as! AVURLAsset
+		onItemDidFinish?(finishedVideo)
 		
-		let finishedURL = urlQueue[0]
-		
-		onItemDidFinish?(finishedURL)
-		
-		urlQueue.remove(at: 0)
-		
-		if urlQueue.count == 0 { // It will still contain the item that just finished
+		if videoQueue.count == 0 {
 			onQueueDidFinish?()
 		} else {
 			loadNextVideo()
